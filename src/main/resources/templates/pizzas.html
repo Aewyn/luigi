@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Pizza's</title>
-  <link rel="stylesheet" href="css/luigi.css">
-  <link rel="shortcut icon" href="images/luigi.ico" type="image/x-icon">
+  <link rel="stylesheet" th:href="@{/css/luigi.css}">
+  <link rel="icon" th:href="@{/images/luigi.ico}" type="image/x-icon">
 </head>
 <body>
 <h1>Pizza's</h1>
@@ -19,7 +19,7 @@
     <tr th:each="pizza : ${allePizzas}" th:object="${pizza}">
       <td th:text="*{naam}"></td>
       <td th:text="*{prijs}" class="getal"></td>
-      <td th:if="*{pikant}">pikant</td>
+      <td><th:block th:if="*{pikant}">pikant</th:block></td>
     </tr>
   </tbody>
   </thead>
