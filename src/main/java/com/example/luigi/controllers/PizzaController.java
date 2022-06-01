@@ -2,10 +2,14 @@ package com.example.luigi.controllers;
 
 import com.example.luigi.domain.Pizza;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Optional;
 
 @Controller
 public class PizzaController {
@@ -17,5 +21,16 @@ public class PizzaController {
     @GetMapping("/pizzas")
     public ModelAndView findAll(){
         return new ModelAndView("pizzas", "allePizzas", allePizzas);
+    }
+
+    private Optional<Pizza> findByIdHelper(long id){
+        return Arrays.stream(allePizzas).filter(pizza->pizza.getId()==id).findFirst();
+    }
+
+    @GetMapping("/pizzas/{id}")
+    public ModelAndView findById(@PathVariable long id){
+        var modelAndView = new ModelAndView("pizza");
+        findByIdHelper(id).ifPresent(gevondenPizza->modelAndView.addObject("pizza", gevondenPizza));
+        return modelAndView;
     }
 }
