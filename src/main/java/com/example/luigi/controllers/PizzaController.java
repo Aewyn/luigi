@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("pizzas")
@@ -34,5 +35,24 @@ public class PizzaController {
 
     private Optional<Pizza> findByIdHelper(long id){
         return Arrays.stream(allePizzas).filter(pizza->pizza.getId()==id).findFirst();
+    }
+
+    private Stream<BigDecimal> findPrijzenHelper(){
+        return Arrays.stream(allePizzas).map(Pizza::getPrijs).distinct().sorted();
+    }
+
+    @GetMapping("prijzen")
+    public ModelAndView prijzen(){
+        return new ModelAndView("pizzasperprijs", "prijzen", findPrijzenHelper().iterator());
+    }
+
+    private Stream<Pizza> findByPrijsHelper(BigDecimal prijs){
+        return Arrays.stream(allePizzas).filter(pizza -> pizza.getPrijs().compareTo(prijs) == 0);
+    }
+
+    @GetMapping("prijzen/{prijs}")
+    public ModelAndView findByPrijs(@PathVariable BigDecimal prijs){
+        return new ModelAndView("pizzasperprijs", "pizzas", findByPrijsHelper(prijs).iterator())
+        .addObject("prijzen", findPrijzenHelper().iterator());
     }
 }

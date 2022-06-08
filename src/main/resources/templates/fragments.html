@@ -5,6 +5,7 @@
             <li><a th:href="@{/pizzas}">Pizza's</a></li>
             <li><a th:href="@{/os}">OS</a></li>
             <li><a th:href="@{/kleuren}">Kleuren</a></li>
+            <li><a th:href="@{/pizzas/prijzen}">Prijzen</a></li>
         </ul>
     </nav>
 
@@ -14,7 +15,7 @@
         <link rel="stylesheet" th:href="@{/css/luigi.css}">
     </head>
 
-    <table th:fragment="pizzaTabel(pizzas)" xmlns:th="http://www.thymeleaf.org">
+    <table th:fragment="pizzaTabel(pizzas)">
         <thead>
         <tr>
             <th>Naam</th>
