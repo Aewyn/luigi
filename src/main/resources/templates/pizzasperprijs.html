@@ -6,7 +6,7 @@
 <h1>Prijzen</h1>
     <ul>
         <li th:each="prijs:${prijzen}">
-            <a th:href="@{/pizzas/prijzen/{prijs}(prijs=${prijs})}"
+            <a th:href="@{/pizzas/prijzensau/{prijs}(prijs=${prijs})}"
                th:text="${prijs}"></a>
         </li>
     </ul>
