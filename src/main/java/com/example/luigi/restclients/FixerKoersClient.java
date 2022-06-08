@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 @Component
 public class FixerKoersClient {
-    private static final Pattern PATTERN = Pattern.compile("\"USD\": *(\\d+.?\\d*).*");
+    private static final Pattern PATTERN = Pattern.compile("^[\\S|\\s]*?\"USD\": *(\\d+.\\d*)[\\S|\\s]*$");
     private final URL url;
     public FixerKoersClient(){
         try{
@@ -24,7 +24,7 @@ public class FixerKoersClient {
     public BigDecimal getDollarKoers(){
         try(var stream = url.openStream()){
             var matcher = PATTERN.matcher(new String(stream.readAllBytes()));
-            if(!matcher.find()){
+            if(!matcher.matches()){
                 throw new KoersClientException("Fixer data ongeldig");
             }
             return new BigDecimal(matcher.group(1));
