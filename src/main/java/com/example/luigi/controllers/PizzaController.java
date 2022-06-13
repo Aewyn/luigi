@@ -1,8 +1,9 @@
 package com.example.luigi.controllers;
 
 import com.example.luigi.domain.Pizza;
+import com.example.luigi.exceptions.KoersClientException;
+import com.example.luigi.services.EuroService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,43 +17,59 @@ import java.util.stream.Stream;
 @Controller
 @RequestMapping("pizzas")
 public class PizzaController {
+
+    private final EuroService euroService;
     private final Pizza[] allePizzas = {
             new Pizza(1, "Prosciutto", BigDecimal.valueOf(4), true),
             new Pizza(2, "Margherita", BigDecimal.valueOf(5), false),
             new Pizza(3, "Calzone", BigDecimal.valueOf(4), false)
     };
+
+    public PizzaController(EuroService euroService) {
+        this.euroService = euroService;
+    }
+
     @GetMapping
-    public ModelAndView findAll(){
+    public ModelAndView findAll() {
         return new ModelAndView("pizzas", "allePizzas", allePizzas);
     }
 
     @GetMapping("{id}")
-    public ModelAndView findById(@PathVariable long id){
+    public ModelAndView findById(@PathVariable long id) {
         var modelAndView = new ModelAndView("pizza");
-        findByIdHelper(id).ifPresent(gevondenPizza->modelAndView.addObject(gevondenPizza));
+        findByIdHelper(id)
+                .ifPresent(gevondenPizza -> {
+            modelAndView.addObject(gevondenPizza);
+            try {
+                modelAndView.addObject(
+                        "inDollar", euroService.naarDollar(gevondenPizza.getPrijs()));
+            } catch (KoersClientException ex) {
+                //Hier komt later code die de exception verwerkt
+            }
+        });
         return modelAndView;
     }
 
-    private Optional<Pizza> findByIdHelper(long id){
-        return Arrays.stream(allePizzas).filter(pizza->pizza.getId()==id).findFirst();
+    private Optional<Pizza> findByIdHelper(long id) {
+        return Arrays.stream(allePizzas).filter(pizza -> pizza.getId() == id).findFirst();
     }
 
-    private Stream<BigDecimal> findPrijzenHelper(){
+    private Stream<BigDecimal> findPrijzenHelper() {
         return Arrays.stream(allePizzas).map(Pizza::getPrijs).distinct().sorted();
     }
 
     @GetMapping("prijzen")
-    public ModelAndView prijzen(){
+    public ModelAndView prijzen() {
         return new ModelAndView("pizzasperprijs", "prijzen", findPrijzenHelper().iterator());
     }
 
-    private Stream<Pizza> findByPrijsHelper(BigDecimal prijs){
+    private Stream<Pizza> findByPrijsHelper(BigDecimal prijs) {
         return Arrays.stream(allePizzas).filter(pizza -> pizza.getPrijs().compareTo(prijs) == 0);
     }
 
     @GetMapping("prijzen/{prijs}")
-    public ModelAndView findByPrijs(@PathVariable BigDecimal prijs){
+    public ModelAndView findByPrijs(@PathVariable BigDecimal prijs) {
         return new ModelAndView("pizzasperprijs", "pizzas", findByPrijsHelper(prijs).iterator())
-        .addObject("prijzen", findPrijzenHelper().iterator());
+                .addObject("prijzen", findPrijzenHelper().iterator());
     }
 }

@@ -7,6 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -20,13 +22,13 @@ class EuroServiceTest {
 
     @BeforeEach
     void beforeEach(){
-        System.out.println(koersClient.getClass());
-        System.out.println(koersClient.getDollarKoers());
         euroService = new EuroService(koersClient);
     }
 
     @Test
     void naarDollar(){
-
+        when(koersClient.getDollarKoers()).thenReturn(BigDecimal.valueOf(1.1565));
+        assertThat(euroService.naarDollar(BigDecimal.valueOf(3))).isEqualByComparingTo("3.47");
+        verify(koersClient).getDollarKoers();
     }
 }
