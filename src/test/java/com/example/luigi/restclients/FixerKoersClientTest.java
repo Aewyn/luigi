@@ -3,11 +3,10 @@ package com.example.luigi.restclients;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class FixerKoersClientTest {
-    private FixerKoersClient client;
+    private KoersClient client;
 
     @BeforeEach
     void beforeEach(){

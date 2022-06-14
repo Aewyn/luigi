@@ -1,6 +1,7 @@
 package com.example.luigi.restclients;
 
 import com.example.luigi.exceptions.KoersClientException;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.xml.stream.XMLInputFactory;
@@ -11,7 +12,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 @Component
-public class ECBKoersClient {
+@Qualifier("ECB")
+class ECBKoersClient implements KoersClient{
     private final URL url;
     private final XMLInputFactory factory = XMLInputFactory.newInstance();
 
@@ -22,7 +24,7 @@ public class ECBKoersClient {
             throw new KoersClientException("ECB URL is verkeerd.", e);
         }
     }
-
+    @Override
     public BigDecimal getDollarKoers() {
         try (var stream = url.openStream()) {
             for (var reader = factory.createXMLStreamReader(stream);

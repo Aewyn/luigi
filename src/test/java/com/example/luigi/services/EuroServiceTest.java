@@ -1,6 +1,6 @@
 package com.example.luigi.services;
 
-import com.example.luigi.restclients.FixerKoersClient;
+import com.example.luigi.restclients.KoersClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,11 +18,11 @@ class EuroServiceTest {
     private EuroService euroService;
 
     @Mock
-    private FixerKoersClient koersClient;
+    private KoersClient koersClient;
 
     @BeforeEach
     void beforeEach(){
-        euroService = new EuroService(koersClient);
+        euroService = new EuroService(new KoersClient[] {koersClient});
     }
 
     @Test
