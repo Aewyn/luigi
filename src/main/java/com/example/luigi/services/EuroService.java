@@ -2,7 +2,6 @@ package com.example.luigi.services;
 
 import com.example.luigi.exceptions.KoersClientException;
 import com.example.luigi.restclients.KoersClient;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
