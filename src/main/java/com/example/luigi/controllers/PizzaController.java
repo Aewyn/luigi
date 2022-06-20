@@ -3,6 +3,8 @@ package com.example.luigi.controllers;
 import com.example.luigi.domain.Pizza;
 import com.example.luigi.exceptions.KoersClientException;
 import com.example.luigi.services.EuroService;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +21,7 @@ import java.util.stream.Stream;
 public class PizzaController {
 
     private final EuroService euroService;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Pizza[] allePizzas = {
             new Pizza(1, "Prosciutto", BigDecimal.valueOf(4), true),
             new Pizza(2, "Margherita", BigDecimal.valueOf(5), false),
@@ -44,7 +47,7 @@ public class PizzaController {
                 modelAndView.addObject(
                         "inDollar", euroService.naarDollar(gevondenPizza.getPrijs()));
             } catch (KoersClientException ex) {
-                //Hier komt later code die de exception verwerkt
+                logger.error("Kan dollar koers niet lezen", ex);
             }
         });
         return modelAndView;
