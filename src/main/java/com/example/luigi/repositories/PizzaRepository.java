@@ -89,7 +89,7 @@ public class PizzaRepository {
                 select id, naam, prijs, pikant
                 from pizzas
                 where prijs = ?
-                order by name
+                order by naam
                 """;
         return template.query(sql, pizzaMapper, prijs);
     }
