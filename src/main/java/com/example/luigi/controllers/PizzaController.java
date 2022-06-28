@@ -70,4 +70,9 @@ public class PizzaController {
         return new ModelAndView("pizzasperprijs", "pizzas", pizzaService.findByPrijs(prijs))
                 .addObject("prijzen", pizzaService.findUniekePrijzen());
     }
+
+    @GetMapping("aantalpizzasperprijs")
+    public ModelAndView findAantalPizzasPerPrijs(){
+        return new ModelAndView("aantalpizzasperprijs", "aantalPizzasPerPrijs", pizzaService.findAantalPizzasPerPrijs());
+    }
 }

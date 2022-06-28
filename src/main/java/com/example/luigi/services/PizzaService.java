@@ -1,5 +1,6 @@
 package com.example.luigi.services;
 
+import com.example.luigi.domain.AantalPizzasPerPrijs;
 import com.example.luigi.domain.Pizza;
 import com.example.luigi.repositories.PizzaRepository;
 import org.springframework.stereotype.Service;
@@ -57,5 +58,10 @@ public class PizzaService {
 
     public List<Pizza> findByIds(Set<Long> ids){
         return pizzaRepository.findByIds(ids);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AantalPizzasPerPrijs> findAantalPizzasPerPrijs(){
+        return pizzaRepository.findAantalPizzasPerPrijs();
     }
 }

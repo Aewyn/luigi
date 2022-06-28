@@ -1,5 +1,6 @@
 package com.example.luigi.repositories;
 
+import com.example.luigi.domain.AantalPizzasPerPrijs;
 import com.example.luigi.domain.Pizza;
 import com.example.luigi.exceptions.PizzaNietGevondenException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -126,4 +127,16 @@ public class PizzaRepository {
 
     private final RowMapper<Pizza> pizzaMapper = (result, rowNum)
             -> new Pizza(result.getLong("id"), result.getString("naam"), result.getBigDecimal("prijs"), result.getBoolean("pikant"));
+
+    public List<AantalPizzasPerPrijs> findAantalPizzasPerPrijs(){
+        var sql = """
+                select prijs, count(*) as aantal
+                from pizzas
+                group by prijs
+                order by prijs
+                """;
+        RowMapper<AantalPizzasPerPrijs> mapper = (result, rowNum) ->
+                new AantalPizzasPerPrijs(result.getBigDecimal("prijs"), result.getInt("aantal"));
+        return template.query(sql, mapper);
+    }
 }
