@@ -2,17 +2,20 @@ package com.example.luigi.controllers;
 
 import com.example.luigi.domain.Pizza;
 import com.example.luigi.exceptions.KoersClientException;
+import com.example.luigi.forms.VanTotPrijsForm;
 import com.example.luigi.services.EuroService;
 import com.example.luigi.services.PizzaService;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
+import java.nio.charset.MalformedInputException;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -74,5 +77,18 @@ public class PizzaController {
     @GetMapping("aantalpizzasperprijs")
     public ModelAndView findAantalPizzasPerPrijs(){
         return new ModelAndView("aantalpizzasperprijs", "aantalPizzasPerPrijs", pizzaService.findAantalPizzasPerPrijs());
+    }
+
+    @GetMapping("vantotprijs")
+    public ModelAndView findByPrijsBetween(VanTotPrijsForm form, Errors errors){
+        var modelAndView = new ModelAndView("vantotprijs");
+        if(errors.hasErrors()){
+            return modelAndView;
+        }
+        return modelAndView.addObject("pizzas", pizzaService.findByPrijsBetween(form.van(), form.tot()));
+    }
+    @GetMapping("vantotprijs/form")
+    public ModelAndView vanTotPrijsForm(){
+        return new ModelAndView("vantotprijs").addObject(new VanTotPrijsForm(null, null));
     }
 }
