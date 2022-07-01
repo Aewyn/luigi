@@ -1,5 +1,7 @@
 package com.example.luigi.domain;
 
+import org.springframework.format.annotation.NumberFormat;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
@@ -9,7 +11,7 @@ public class Pizza {
     private final long id;
     @NotNull
     private final String naam;
-    @NotNull @PositiveOrZero
+    @NotNull @PositiveOrZero @NumberFormat(pattern = "0.00")
     private final BigDecimal prijs;
     private final boolean pikant;
 
